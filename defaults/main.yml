@@ -1,0 +1,30 @@
+---
+
+# The nginx-exporter release to be installed
+nginx_exporter_release_tag: "latest"
+
+# The URL from which download the nginx-exporter release
+nginx_exporter_release_url: ""
+
+# nginx-exporter user and group
+nginx_exporter_user: "nginx_exporter"
+nginx_exporter_group: "nginx_exporter"
+
+# Directory containing the downloaded nginx-exporter release
+nginx_exporter_install_path: "/opt"
+
+# Directory to which symlink the installed nginx-exporter binaries
+nginx_exporter_bin_path: "/usr/local/bin"
+
+# nginx-exporter listen address
+nginx_exporter_listen_address: "127.0.0.1:9100"
+
+# nginx-exporter log level
+nginx_exporter_log_level: "info"
+
+# Directory containing the .prom files that will be collected and exported by the text-file collector
+# See https://github.com/prometheus/nginx_exporter#textfile-collector
+nginx_exporter_collector_textfile_path: "/var/lib/nginx_exporter/textfile-collector/"
+
+# Additional command-line arguments to be added to the nginx-exporter unit
+nginx_exporter_additional_cli_args: ""

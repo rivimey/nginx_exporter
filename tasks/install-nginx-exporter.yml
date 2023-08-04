@@ -1,0 +1,42 @@
+---
+
+- name: Create the nginx-exporter group
+  group:
+    name: "{{ nginx_exporter_group }}"
+    state: present
+
+- name: Create the nginx-exporter user
+  user:
+    name: "{{ nginx_exporter_user }}"
+    state: present
+
+- include: github-nginx-exporter-release.yml
+  when: not nginx_exporter_release_url
+
+- name: Make sure the nginx-exporter install directory exists
+  file:
+    dest: "{{ nginx_exporter_install_path }}/nginx_exporter"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: 0755
+    recurse: true
+
+- name: Get the name of the nginx-exporter release archive
+  set_fact:
+    _nginx_exporter_archive: "{{ nginx_exporter_release_url | basename }}"
+
+- name: Download the nginx-exporter
+  unarchive:
+    src: "{{ nginx_exporter_release_url }}"
+    dest: "{{ nginx_exporter_install_path }}/nginx_exporter"
+    creates: "{{ nginx_exporter_install_path }}/nginx_exporter/nginx-prometheus-exporter"
+    remote_src: yes
+
+- name: Symlink the nginx-exporter binaries
+  file:
+    src: "{{ nginx_exporter_install_path }}//nginx_exporter/nginx-prometheus-exporter"
+    dest: "{{ nginx_exporter_bin_path }}/nginx_exporter"
+    state: link
+  notify: restart nginx_exporter
+

@@ -1,0 +1,37 @@
+---
+
+- name: Create the nginx-exporter textfile collector directory
+  file:
+    name: "{{ nginx_exporter_collector_textfile_path }}"
+    state: directory
+    group: "{{ nginx_exporter_group }}"
+
+- name: Create the Systemd Unit file for the nginx-exporter service
+  template:
+    src: nginx_exporter.systemd.j2
+    dest: /etc/systemd/system/nginx_exporter.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload systemd and restart nginx_exporter
+  when: ansible_service_mgr == "systemd"
+
+- name: Create the Upstart Unit file for the nginx-exporter service
+  template:
+    src: nginx_exporter.upstart.j2
+    dest: /etc/init/nginx_exporter.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart nginx_exporter
+  when: ansible_service_mgr == "upstart"
+
+- name: Create the generic start-stop script for the nginx-exporter service
+  template:
+    src: nginx_exporter.service.j2
+    dest: /etc/init.d/nginx_exporter
+    owner: root
+    group: root
+    mode: 0755
+  notify: restart nginx_exporter
+  when: ansible_service_mgr not in [ "systemd", "upstart" ]

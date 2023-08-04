@@ -1,0 +1,10 @@
+---
+
+- include: install-nginx-exporter.yml
+- include: configure-nginx-exporter.yml
+
+- name: Start and enable the nginx-exporter service
+  service:
+    name: nginx_exporter
+    state: started
+    enabled: true

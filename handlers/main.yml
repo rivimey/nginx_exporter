@@ -1,0 +1,17 @@
+---
+
+- name: restart nginx_exporter
+  service:
+    name: nginx_exporter
+    state: restarted
+
+- name: reload nginx_exporter
+  service:
+    name: nginx_exporter
+    state: reloaded
+
+- name: reload systemd and restart nginx_exporter
+  command: systemctl daemon-reload
+  notify: restart nginx_exporter
+  tags:
+    - skip_ansible_lint

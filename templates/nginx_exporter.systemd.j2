@@ -1,0 +1,34 @@
+[Unit]
+Description=nginx_exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User={{ nginx_exporter_user }}
+Group={{ nginx_exporter_group }}
+Type=simple
+Restart=always
+ExecStart={{ nginx_exporter_bin_path }}/nginx_exporter \
+    --web.listen-address {{ nginx_exporter_listen_address }}{% if nginx_exporter_additional_cli_args | length > 0 %} \
+    {{ nginx_exporter_additional_cli_args }}{% endif %}
+
+ProtectHome=true
+PrivateTmp=true
+ProtectSystem=full
+NoNewPrivileges=true
+PrivateDevices=true
+ProtectControlGroups=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+SystemCallFilter=~@obsolete
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+ProtectClock=yes
+ProtectHostname=yes
+ProtectKernelLogs=yes
+
+[Install]
+WantedBy=multi-user.target
